@@ -1,5 +1,5 @@
 ---
-name: Build and Scan Docker Image for vote app
+name: Build & Scan Docker Image for vote app
 
 on:
   push:
