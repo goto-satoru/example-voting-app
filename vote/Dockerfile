@@ -9,6 +9,9 @@ RUN apt-get update && \
 # Set the application directory
 WORKDIR /usr/local/app
 
+RUN pip install --upgrade pip && \
+    pip install --upgrade setuptools
+
 # Install our requirements.txt
 COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
