@@ -19,7 +19,7 @@ env:
   DOCKER_IMAGE: gotosatoru/examplevotingapp_worker:latest
 
 jobs:
-  build-push-scan:
+  build-push-scan-worker:
     runs-on: ubuntu-latest
 
     steps:

@@ -19,7 +19,7 @@ env:
   DOCKER_IMAGE: gotosatoru/examplevotingapp_vote:latest
 
 jobs:
-  build-push-scan:
+  build-push-scan-vote:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,7 +41,7 @@ jobs:
           context: vote
           push: true
           tags: ${{ env.DOCKER_IMAGE }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
 
       - name: Install Sysdig CLI Scanner
         run: |
