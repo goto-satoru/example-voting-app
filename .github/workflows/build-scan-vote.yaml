@@ -1,7 +1,4 @@
 ---
-env:
-  DOCKER_IMAGE: gotosatoru/examplevotingapp_vote:latest
-
 name: Build and Push Docker Image for vote app
 
 on:
@@ -17,6 +14,9 @@ on:
     paths:
       - 'vote/**'
       - '.github/workflows/build-scan-vote.yaml'
+
+env:
+  DOCKER_IMAGE: gotosatoru/examplevotingapp_vote:latest
 
 jobs:
   build-push-scan:
@@ -40,12 +40,20 @@ jobs:
         with:
           context: vote
           push: true
-          tags: ${DOCKER_IMAGE}
+          tags: ${ env.DOCKER_IMAGE }}
 
-      - name: Scan Docker Image with Sysdig CLI Scanner
+      - name: Install Sysdig CLI Scanner
         run: |
-          docker pull ${DOCKER_IMAGE}
-          docker scan --login --address https://cloud.sysdig.com --token ${{ secrets.SECURE_API_TOKEN }} ${DOCKER_IMAGE}
+          curl -LO "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner"
+          sudo mv sysdig-cli-scanner /usr/local/bin/sysdig-cli-scanner
+          sudo chmod +x /usr/local/bin/sysdig-cli-scanner
+
+      - name: Scan the Docker image
+        env:
+          SECURE_API_TOKEN: ${{ secrets.SECURE_API_TOKEN }}
+          SYSDIG_SECURE_ENDPOINT: https://app.au1.sysdig.com
+        run: |
+          /usr/local/bin/sysdig-cli-scanner --apiurl ${SYSDIG_SECURE_ENDPOINT} ${DOCKER_IMAGE}
 
       - name: if scan failed
         if: failure()
