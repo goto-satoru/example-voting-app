@@ -1,3 +1,7 @@
+---
+env:
+  DOCKER_IMAGE: gotosatoru/examplevotingapp_result:latest
+
 name: Build & Scan result App
 # template source: https://github.com/dockersamples/.github/blob/main/templates/call-docker-build.yaml
 
@@ -53,7 +57,7 @@ jobs:
 
       - name: Pull Docker image
         run: |
-          docker pull gotosatoru/examplevotingapp_result:latest
+          docker pull ${DOCKER_IMAGE}
 
       - name: Install Sysdig CLI Scanner
         run: |
@@ -66,6 +70,4 @@ jobs:
           SECURE_API_TOKEN: ${{ secrets.SECURE_API_TOKEN }}
           SYSDIG_SECURE_ENDPOINT: https://app.au1.sysdig.com
         run: |
-          /usr/local/bin/sysdig-cli-scanner \
-            --apiurl ${SYSDIG_SECURE_ENDPOINT} \
-            gotosatoru/examplevotingapp_result:latest
+          /usr/local/bin/sysdig-cli-scanner --apiurl ${SYSDIG_SECURE_ENDPOINT} ${DOCKER_IMAGE}
