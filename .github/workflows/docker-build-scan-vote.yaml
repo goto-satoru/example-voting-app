@@ -67,6 +67,7 @@ jobs:
         run: |
           curl -LO "https://download.sysdig.com/scanning/bin/sysdig-cli-scanner/$(curl -L -s https://download.sysdig.com/scanning/sysdig-cli-scanner/latest_version.txt)/linux/amd64/sysdig-cli-scanner"
           sudo mv sysdig-cli-scanner /usr/local/bin/sysdig-cli-scanner
+          sudo chmod +x /usr/local/bin/sysdig-cli-scanner
 
       - name: Scan the Docker image using Sysdig CLI Scanner
         env:
