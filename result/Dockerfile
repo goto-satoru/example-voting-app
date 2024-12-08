@@ -15,6 +15,7 @@ COPY package*.json ./
 RUN npm ci && \
     npm cache clean --force && \
     mv /usr/local/app/node_modules /node_modules
+RUN npm install
 
 COPY . .
 
