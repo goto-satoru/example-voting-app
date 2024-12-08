@@ -51,9 +51,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Pull Docker image
-        run: |
-          docker pull gotosatoru/examplevotingapp_vote:latest
+      # - name: Pull Docker image
+      #   run: |
+      #     docker pull gotosatoru/examplevotingapp_vote:latest
 
       - name: Install Sysdig CLI Scanner
         run: |
