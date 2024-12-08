@@ -1,4 +1,4 @@
-name: Build & Scan Vote App
+name: Build & Scan worker App
 # template source: https://github.com/dockersamples/.github/blob/main/templates/call-docker-build.yaml
 
 on:
@@ -7,18 +7,18 @@ on:
     branches:
       - 'main'
     paths:
-      - 'vote/**'
-      - '.github/workflows/docker-build-scan-vote.yaml'
+      - 'worker/**'
+      - '.github/workflows/docker-build-scan-worker.yaml'
   pull_request:
     branches:
       - 'main'
     paths:
-      - 'vote/**'
-      - '.github/workflows/docker-build-scan-vote.yaml'
+      - 'worker/**'
+      - '.github/workflows/docker-build-scan-worker.yaml'
 
 jobs:
   build:
-    name: Vote Call Docker Build
+    name: Build Worker app
     uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
     permissions:
       contents: read
@@ -31,13 +31,13 @@ jobs:
       dockerhub-enable: true
       # ghcr-enable: false
 
-      image-names: gotosatoru/examplevotingapp_vote
+      image-names: gotosatoru/examplevotingapp_worker
       tag-rules: |
         type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
         type=ref,event=pr
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
-      context: vote
+      context: worker
 
       # platforms: linux/amd64,linux/arm64,linux/arm/v7
       platforms: linux/amd64
@@ -61,7 +61,7 @@ jobs:
 
       - name: Pull Docker image
         run: |
-          docker pull gotosatoru/examplevotingapp_vote:latest
+          docker pull gotosatoru/examplevotingapp_worker:latest
 
       - name: Install Sysdig CLI Scanner
         run: |
@@ -76,4 +76,4 @@ jobs:
         run: |
           /usr/local/bin/sysdig-cli-scanner \
             --apiurl ${SYSDIG_SECURE_ENDPOINT} \
-            gotosatoru/examplevotingapp_vote:latest
+            gotosatoru/examplevotingapp_worker:latest
