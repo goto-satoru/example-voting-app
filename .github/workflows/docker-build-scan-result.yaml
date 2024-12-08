@@ -1,4 +1,4 @@
-name: Build & Scan Vote App
+name: Build & Scan result App
 # template source: https://github.com/dockersamples/.github/blob/main/templates/call-docker-build.yaml
 
 on:
@@ -7,18 +7,18 @@ on:
     branches:
       - 'main'
     paths:
-      - 'vote/**'
-      - '.github/workflows/docker-build-scan-vote.yaml'
+      - 'result/**'
+      - '.github/workflows/docker-build-scan-result.yaml'
   pull_request:
     branches:
       - 'main'
     paths:
-      - 'vote/**'
-      - '.github/workflows/docker-build-scan-vote.yaml'
+      - 'result/**'
+      - '.github/workflows/docker-build-scan-result.yaml'
 
 jobs:
-  build:
-    name: Build Vote app
+  build-push:
+    name: Build Result app
     uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
     permissions:
       contents: read
@@ -31,28 +31,22 @@ jobs:
       dockerhub-enable: true
       # ghcr-enable: false
 
-      image-names: gotosatoru/examplevotingapp_vote
+      image-names: gotosatoru/examplevotingapp_result
       tag-rules: |
         type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
         type=ref,event=pr
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
-      context: vote
+      context: result
 
       # platforms: linux/amd64,linux/arm64,linux/arm/v7
       platforms: linux/amd64
 
   sysdig-cli-scanner:
-    name: Scan Docker Image
+    name: Scan Docker Image with Sysdig CLI Scanner
     runs-on: ubuntu-latest
     needs: build  # This ensures that the scan runs after the build job
     steps:
-      # - name: Checkout repository
-      #   uses: actions/checkout@v3
-
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v2
-
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
@@ -61,7 +55,7 @@ jobs:
 
       - name: Pull Docker image
         run: |
-          docker pull gotosatoru/examplevotingapp_vote:latest
+          docker pull gotosatoru/examplevotingapp_result:latest
 
       - name: Install Sysdig CLI Scanner
         run: |
@@ -76,4 +70,4 @@ jobs:
         run: |
           /usr/local/bin/sysdig-cli-scanner \
             --apiurl ${SYSDIG_SECURE_ENDPOINT} \
-            gotosatoru/examplevotingapp_vote:latest
+            gotosatoru/examplevotingapp_result:latest

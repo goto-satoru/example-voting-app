@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    name: Build Vote app
+    name: Vote Call Docker Build
     uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
     permissions:
       contents: read
@@ -43,7 +43,7 @@ jobs:
       platforms: linux/amd64
 
   sysdig-cli-scanner:
-    name: Scan Docker Image
+    name: Scan Docker Image with Sysdig CLI Scanner
     runs-on: ubuntu-latest
     needs: build  # This ensures that the scan runs after the build job
     steps:
