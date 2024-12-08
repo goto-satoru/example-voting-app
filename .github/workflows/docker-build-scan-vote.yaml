@@ -74,7 +74,6 @@ jobs:
           SECURE_API_TOKEN: ${{ secrets.SECURE_API_TOKEN }}
           SYSDIG_SECURE_ENDPOINT: https://app.au1.sysdig.com
         run: |
-          echo "$SECURE_API_TOKEN" | cut -c 1-9
           /usr/local/bin/sysdig-cli-scanner \
             --apiurl ${SYSDIG_SECURE_ENDPOINT} \
             gotosatoru/examplevotingapp_vote:latest
