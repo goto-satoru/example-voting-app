@@ -55,8 +55,3 @@ jobs:
           SYSDIG_SECURE_ENDPOINT: https://app.au1.sysdig.com
         run: |
           /usr/local/bin/sysdig-cli-scanner --apiurl ${SYSDIG_SECURE_ENDPOINT} ${DOCKER_IMAGE}
-
-      - name: Check the scan result
-        if: failure()
-        run: |
-          echo "Sysdig CLI Scanner FAILED"
