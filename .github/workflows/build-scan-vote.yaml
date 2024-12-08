@@ -41,6 +41,7 @@ jobs:
           context: vote
           push: true
           tags: ${{ env.DOCKER_IMAGE }}
+          platforms: linux/amd64,linux/arm64
 
       - name: Install Sysdig CLI Scanner
         run: |
