@@ -1,0 +1,53 @@
+---
+env:
+  DOCKER_IMAGE: gotosatoru/examplevotingapp_vote:latest
+
+name: Build and Push Docker Image for vote app
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'vote/**'
+      - '.github/workflows/build-scan-vote.yaml'
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'vote/**'
+      - '.github/workflows/build-scan-vote.yaml'
+
+jobs:
+  build-push-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: vote
+          push: true
+          tags: ${DOCKER_IMAGE}
+
+      - name: Scan Docker Image with Sysdig CLI Scanner
+        run: |
+          docker pull ${DOCKER_IMAGE}
+          docker scan --login --address https://cloud.sysdig.com --token ${{ secrets.SECURE_API_TOKEN }} ${DOCKER_IMAGE}
+
+      - name: if scan failed
+        if: failure()
+        run: |
+          echo "Sysdig scanner FAILD"
