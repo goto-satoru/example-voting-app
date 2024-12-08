@@ -6,36 +6,29 @@ on:
   push:
     branches:
       - 'main'
-    # only build when important files change
     paths:
       - 'result/**'
       - '.github/workflows/call-docker-build-result.yaml'
   pull_request:
     branches:
       - 'main'
-    # only build when important files change
     paths:
       - 'result/**'
       - '.github/workflows/call-docker-build-result.yaml'
 
 jobs:
   call-docker-build:
-
     name: Result Call Docker Build
-
     uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
-
     permissions:
       contents: read
       packages: write # needed to push docker image to ghcr.io
       pull-requests: write # needed to create and update comments in PRs
-    
     secrets:
       # Only needed if with:dockerhub-enable is true below
       dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
       # Only needed if with:dockerhub-enable is true below
       dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
-
     with:
       ### REQUIRED
       ### ENABLE ONE OR BOTH REGISTRIES
@@ -43,7 +36,6 @@ jobs:
       ### NOTE if Docker Hub is set to true, you must set secrets above and also add account/repo/tags below
       dockerhub-enable: true
       ghcr-enable: false
-
       ### REQUIRED 
       ### A list of the account/repo names for docker build. List should match what's enabled above
       ### defaults to:
