@@ -1,4 +1,4 @@
-name: Build Vote
+name: Build & Scan Vote App
 # template source: https://github.com/dockersamples/.github/blob/main/templates/call-docker-build.yaml
 
 on:
@@ -32,9 +32,6 @@ jobs:
       # ghcr-enable: false
 
       image-names: gotosatoru/examplevotingapp_vote
-      ### REQUIRED set rules for tagging images, based on special action syntax:
-      ### https://github.com/docker/metadata-action#tags-input
-      ### defaults to:
       tag-rules: |
         type=raw,value=latest,enable=${{ endsWith(github.ref, github.event.repository.default_branch) }}
         type=ref,event=pr
